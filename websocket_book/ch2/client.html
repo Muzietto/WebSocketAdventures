@@ -5,11 +5,14 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css"></style>
-    <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css"></style>
+    <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
+    <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
 
     <script>
+    if (window.WebSocket) {
+      console.log("WebSocket: supported");
+
       var stock_request = {"stocks": ["AAPL", "MSFT", "AMZN", "GOOG", "YHOO"]};
       var stocks = {
         "AAPL": 0,
@@ -19,8 +22,8 @@
         "YHOO": 0
       };
       
-      var ws = new WebSocket("ws://localhost:8181");
-      
+      var socket = new WebSocket("ws://localhost:8181");
+
       // UI update function
       var changeStockEntry = function(symbol, originalValue, newValue) {
         var valElem = $('#' + symbol + ' span');
@@ -37,13 +40,14 @@
 
       // EVENT HANDLERS
       // WebSocket connection established
-      ws.onopen = function(e) {
+      socket.onopen = function(e) {
         console.log("Connection established");
-        ws.send(JSON.stringify(stock_request));
+        console.log("readyState is " + socket.readyState);
+        socket.send(JSON.stringify(stock_request));
       };
 
       // WebSocket message handler
-      ws.onmessage = function(e) {
+      socket.onmessage = function(e) {
         var stocksData = JSON.parse(e.data);
 
         for (var symbol in stocksData) {
@@ -55,15 +59,12 @@
       };
 
       // WebSocket error handler      
-      ws.onerror = function(e) {
-        debugger;
+      socket.onerror = function(e) {
         console.log("WebSocket failure, error", e);
-        handleErrors(e);
       };
       
       // WebSocket close handler
-      ws.onclose = function(e) {
-        debugger;
+      socket.onclose = function(e) {
         console.log("WebSocket connection closed", e);
 
         for(var symbol in stocks) {
@@ -72,6 +73,10 @@
           }
         }
       }
+    } else {
+    console.log("WebSocket: unsupported");
+    // ... fallback mode, or error back to user
+    }
     </script>
 
   </head>
@@ -89,23 +94,23 @@
           <tbody id="stockRows">
             <tr>
               <td><h3>AAPL</h3></td>
-              <td id="AAPL"><h3><span class="label label-default">95.00</span></td>
+              <td id="AAPL"><h3><span class="label label-default">95.00</span></h3></td>
             </tr>
             <tr>
               <td><h3>MSFT</h3></td>
-              <td id="MSFT"><h3><span class="label label-default">50.00</span></td>
+              <td id="MSFT"><h3><span class="label label-default">50.00</span></h3></td>
             </tr>
             <tr>
               <td><h3>AMZN</h3></td>
-              <td id="AMZN"><h3><span class="label label-default">300.00</span></td>
+              <td id="AMZN"><h3><span class="label label-default">300.00</span></h3></td>
             </tr>
             <tr>
               <td><h3>GOOG</h3></td>
-              <td id="GOOG"><h3><span class="label label-default">550.00</span></td>
+              <td id="GOOG"><h3><span class="label label-default">550.00</span></h3></td>
             </tr>
             <tr>
               <td><h3>YHOO</h3></td>
-              <td id="YHOO"><h3><span class="label label-default">35.00</span></td>
+              <td id="YHOO"><h3><span class="label label-default">35.00</span></h3></td>
             </tr>
           </tbody>
         </table>

@@ -26,12 +26,21 @@ server.on('connection', function (socket) {
     }, 1000);
 
   socket.on('message', function (message) {
+    console.log("readyState is " + socket.readyState);
+    console.log("protocol is " + socket.protocol);
+    console.log("bufferedAmount is " + socket.bufferedAmount);
+
     var stock_request = JSON.parse(message);
     clientStocks = stock_request['stocks'];
+
     sendStockUpdates(socket);
   });
 
-  socket.on('close', function () {
+  socket.on('close', function (code) {
+    console.log("code is " + code);
+    console.log("readyState is " + socket.readyState);
+    console.log('socket is being closed');
+    debugger;
     if (typeof clientStockUpdater !== 'undefined') {
       clearInterval(clientStockUpdater);
     }
@@ -44,6 +53,7 @@ server.on('connection', function (socket) {
         symbol = clientStocks[i];
         stocksObj[symbol] = stocks[symbol];
       }
+      console.log("Sending data");
       socket.send(JSON.stringify(stocksObj));
     }
   }

@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>WebSocket Chat Demo ch3</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
+    <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+    <script>
+      var socket = new WebSocket("ws://localhost:8181");
+
+      socket.onopen = function(e) {
+        console.log('Connection to server opened');
+        //document.getElementById('whoami').innerHtml('<h2>io sono ' + e.uuid + '</h2>');
+      }
+
+      socket.onmessage = function(e) {
+        var data = JSON.parse(e.data);
+        var messages = document.getElementById('messages');
+        var message = document.createElement("li");
+        message.innerHTML = data.uuid + ' says: ' + data.message;
+        messages.appendChild(message);
+      }
+
+      function sendMessage() {
+        socket.send($('#message').val());
+      }
+    </script>
+  </head>
+  <body lang="en">
+    <div class="vertical-center">
+      <div class="container">
+        <div id="whoami"/>
+        <p>&nbsp;</p>
+        <ul id="messages"></ul>
+        <form role="form" id="chat_form" onsubmit="sendMessage(); return false;">
+          <div class="form-group">
+            <input class="form-control" type="text" name="message" id="message" placeholder="Type text to echo in here" value="" autofocus/>
+          </div>
+          <button type="button" id="send" class="btn btn-primary" onclick="sendMessage();">Send!</button>
+        </form>
+      </div>
+    </div>
+    <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+  </body>
+</html>
