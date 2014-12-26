@@ -20,7 +20,7 @@
         var data = JSON.parse(e.data);
         var messages = document.getElementById('messages');
         var message = document.createElement("li");
-        message.innerHTML = data.nickname + ' says: ' + data.message;
+        message.innerHTML = '[' + data.nickname + '] - ' + data.message;
         messages.appendChild(message);
       }
 
@@ -41,6 +41,7 @@
             <input class="form-control" type="text" name="message" id="message" placeholder="Type text to echo in here" value="" autofocus/>
           </div>
           <button type="button" id="send" class="btn btn-primary" onclick="sendMessage();">Send!</button>
+          <button type="button" id="close" class="btn btn-primary" onclick="socket.close(1000,'Ciao');">Close</button>
         </form>
       </div>
     </div>
