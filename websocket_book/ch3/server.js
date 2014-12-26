@@ -11,30 +11,42 @@ var clients = [];
 
 server.on('connection', function (socket) {
   var this_client_uuid = uuid.v4();
-  clients.push({'uuid':this_client_uuid, 'socket':socket});
-  console.log('client [%s] connected', this_client_uuid);
+  var this_client_nickname = this_client_uuid.substr(0,8);
+  clients.push({'uuid':this_client_uuid, 'socket':socket, 'nickname': this_client_nickname});
+  console.log('client [%s] connected', this_client_nickname);
 
   socket.on('message', function (message) {
-    console.log("message from [%s] is [%s]", this_client_uuid, message);
+    console.log("message from [%s] is [%s]", this_client_nickname, message);
+    
+    if (message.indexOf('/nick') === 0) {
+      var nick_splitted = message.split(' ');
+      if (nick_splitted.length >= 2) {
+        nick_splitted.splice(0,1); // side effect
+        var old_nick = this_client_nickname;
+        this_client_nickname = nick_splitted.join(' ');
+        
+        message = 'Client ' + old_nick + ' changed to ' + this_client_nickname;
+      }
+    }
     
     clients.forEach(function(client, index) {
       var clientSocket = client.socket;
       
       if (clientSocket.readyState === 1) {
-        console.log('sending to client [%s]: %s', client.uuid, message);
+        console.log('sending to client [%s]: %s', client.nickname, message);
         clientSocket.send(JSON.stringify({
-          'uuid': this_client_uuid,
+          'nickname': this_client_nickname,
           'message': message
         }));
       } else {
-        console.log('clientSocket.readyState is %s', clientSocket.readyState);
+        console.log('Can\'t send: readyState for %s is %s', client.nickname, clientSocket.readyState);
       }
     });
   });
 
   socket.on('close', function (code) {
     console.log("code is " + code);
-    console.log('socket for client [%s] is being closed', this_client_uuid);
+    console.log('socket for client [%s] is being closed', nickname);
 
     clients = clients.filter(function(client) {
       client.uuid !== this_client_uuid;

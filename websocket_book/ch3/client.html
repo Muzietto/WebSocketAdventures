@@ -20,12 +20,13 @@
         var data = JSON.parse(e.data);
         var messages = document.getElementById('messages');
         var message = document.createElement("li");
-        message.innerHTML = data.uuid + ' says: ' + data.message;
+        message.innerHTML = data.nickname + ' says: ' + data.message;
         messages.appendChild(message);
       }
 
       function sendMessage() {
         socket.send($('#message').val());
+        $('#message').val('');
       }
     </script>
   </head>
