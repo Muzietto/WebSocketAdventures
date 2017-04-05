@@ -1,0 +1,23 @@
+{
+  "name": "websocketadventures",
+  "version": "1.0.0",
+  "description": "WebSocketAdventures",
+  "main": "index.js",
+  "dependencies": {
+    "ws": "^2.2.3"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Muzietto/WebSocketAdventures.git"
+  },
+  "author": "Marco Faustinelli (muzietto)",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Muzietto/WebSocketAdventures/issues"
+  },
+  "homepage": "https://github.com/Muzietto/WebSocketAdventures#readme"
+}
