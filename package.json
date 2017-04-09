@@ -4,6 +4,7 @@
   "description": "WebSocketAdventures",
   "main": "index.js",
   "dependencies": {
+    "socket.io": "^1.7.3",
     "ws": "^2.2.3"
   },
   "devDependencies": {},
