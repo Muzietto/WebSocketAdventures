@@ -39,6 +39,9 @@ wsServer.on('connection', function (socket) {
   });
 });
 wsServer.broadcast = broadcast;
+wsServer.clearClients = function() {
+  wsClients = [];
+}
 
 function broadcast(message) {
   wsClients.forEach(function(client, index) {
