@@ -8,6 +8,9 @@ Array.prototype.spliceP = function(predicate, length) {
 
 var uuid = require('node-uuid');
 var WebSocketServer = require('ws').Server;
+function isClosingMessage(msg) {
+  return msg.indexOf('end_job') !== -1;
+}
 
 // webSocket server
 var wsServer = new WebSocketServer({
