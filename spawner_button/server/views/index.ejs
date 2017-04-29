@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title><%= title %></title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+  </head>
+  <body lang="en">
+    <h1>Welcome to <%= title %></h1>
+    <div class="horizon" style="width:400px;margin:0 auto;">
+      <button id="spawnerButton">CLICK TO START</button>
+      <div id="messagesDiv" style="width:600px;height:440px;border:2px solid green;border-radius:5px;position:absolute;padding:2px;overflow:hidden;">
+        <div id="scroller" style="position:absolute;bottom:0;border:1px solid red;">
+          <ul id="messages"></ul>
+        </div>
+      </div>
+    </div>
+    <script>
+      var socket = new WebSocket("ws://localhost:8181");
+      var $scroller = $("#scroller");
+      $scroller.css({
+        height: '100%',
+        'overflow-y': 'scroll'
+      });
+
+      socket.onopen = function(e) {
+        console.log('Connection to server opened');
+      }
+
+      socket.onmessage = function(e) {
+        var data = e.data;
+        console.log('received ' + data);
+        var messages = document.getElementById('messages');
+        var message = document.createElement("li");
+        message.innerHTML = data;
+        messages.appendChild(message);
+        $scroller.scrollTop($scroller[0].scrollHeight);
+      }
+
+      $('#spawnerButton').click(onButtonClick);
+
+      function onButtonClick(ev) {
+        $.get('/api/simulation');
+      }
+    </script>
+  </body>
+</html>
