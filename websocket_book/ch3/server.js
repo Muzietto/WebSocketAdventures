@@ -32,8 +32,8 @@ if (typeof module !== 'undefined') {
   var WebSocketServer = require('ws').Server;
 
   var server = new WebSocketServer({
-      port : 8181
-    });
+    port : 8181
+  });
 
   server.on('connection', function (socket) {
     var this_client_uuid = uuid.v4();
