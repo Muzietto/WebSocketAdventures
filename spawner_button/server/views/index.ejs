@@ -12,18 +12,16 @@
     <div class="horizon" style="width:400px;margin:0 auto;">
       <button id="spawnerButton">CLICK TO START</button>
       <div id="messagesDiv" style="width:600px;height:440px;border:2px solid green;border-radius:5px;position:absolute;padding:2px;overflow:hidden;">
-        <div id="scroller" style="position:absolute;bottom:0;border:1px solid red;">
+        <div id="scroller" style="height:100%;overflow-y:scroll;position:absolute;bottom:0;border:1px solid red;">
           <ul id="messages"></ul>
         </div>
       </div>
     </div>
     <script>
-      var socket = new WebSocket("ws://localhost:8181");
-      var $scroller = $("#scroller");
-      $scroller.css({
-        height: '100%',
-        'overflow-y': 'scroll'
-      });
+      var socket = new WebSocket('ws://localhost:8181');
+      var $scroller = $('#scroller');
+      var $spawnerButton = $('#spawnerButton')
+      var closingMessage = 'OVER AND OUT';
 
       socket.onopen = function(e) {
         console.log('Connection to server opened');
@@ -37,11 +35,17 @@
         message.innerHTML = data;
         messages.appendChild(message);
         $scroller.scrollTop($scroller[0].scrollHeight);
+
+        if (data.indexOf(closingMessage) !== -1) {
+          $spawnerButton.prop('disabled', false);
+        }
       }
 
       $('#spawnerButton').click(onButtonClick);
 
       function onButtonClick(ev) {
+        $('ul', $scroller).empty();
+        $spawnerButton.prop('disabled', true);
         $.get('/api/simulation');
       }
     </script>
