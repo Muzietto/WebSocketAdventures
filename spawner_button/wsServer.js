@@ -1,6 +1,6 @@
 Array.prototype.spliceP = function(predicate, length) {
   length = length || 1;
-  for (var i=0;i<this.length;i++) {
+  for (var i=0; i < this.length; i++) {
     if (predicate(this[i])) return this.splice(i,length);
   }
   return [];
@@ -31,7 +31,7 @@ wsServer.on('connection', function (socket) {
   });
 
   socket.on('close', function (code) {
-    var announcement = this_client_uuid + ' left the chat!';
+    var announcement = this_client_uuid + ' left!';
     broadcast(announcement);
     console.log('code is ' + code);
     console.log('socket for client [%s] is being closed', this_client_uuid);
