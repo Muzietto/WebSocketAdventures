@@ -1,11 +1,13 @@
 var express = require('express');
 var router = express.Router();
 var wsServer = require('../../wsServer');
+var runnableJob = 'spawner_button/server/cli/longRunningJob.js';
 
 router.get('/simulation', (req, res) => {
   console.log('starting simulation');
   var exec = require('child_process').exec;
-  var child = exec('node spawner_button/server/cli/longRunningJob.js');
+  var child = exec('node ' + runnableJob);
+
   child.stdout.on('data', function(data) {
     console.log('stdout: ' + data);
     wsServer.broadcast(data);
@@ -18,6 +20,7 @@ router.get('/simulation', (req, res) => {
     wsServer.broadcast('end_job: code=' + code);
     console.log('closing code: ' + code);
   });
+
   res.send(200, 'job_started');
 });
 
